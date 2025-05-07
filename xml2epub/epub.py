@@ -207,8 +207,8 @@ class ContentOpf(_EpubFile):
     Epub的 .opf 类, 包含文件清单和文件阅读顺序等.
     """
 
-    def __init__(self, title, creator='', language='', rights='', publisher='', uid='', date=time.strftime("%Y-%m-%d")):
-        super(ContentOpf, self).__init__(os.path.join(constants.EPUB_TEMPLATES_DIR, 'opf.xml'),
+    def __init__(self, title, creator='', language='', rights='', publisher='', uid='', date=time.strftime("%Y-%m-%d"), opf_template = "opf.xml"):
+        super(ContentOpf, self).__init__(os.path.join(constants.EPUB_TEMPLATES_DIR, opf_template),
                                          title=title,
                                          creator=creator,
                                          language=language,
@@ -269,7 +269,7 @@ class Epub(object):
         epub_dir(Option[str]): epub的中间文件生成的路径，默认使用系统的临时文件路径，也可自行指定.
     """
 
-    def __init__(self, title, creator='dfface', language='en', rights='', publisher='dfface/xml2epub', epub_dir=None):
+    def __init__(self, title, creator='dfface', language='en', rights='', publisher='dfface/xml2epub', epub_dir=None, opf_template=None):
         self._create_directories(epub_dir)
         self.chapters = []
         self.title = title
@@ -290,7 +290,7 @@ class Epub(object):
             self.title, self.uid
         )
         self.opf = ContentOpf(
-            self.title, self.creator, self.language, self.rights, self.publisher, self.uid)
+            self.title, self.creator, self.language, self.rights, self.publisher, self.uid, opf_template = "opf.xml" if opf_template is None else f"opf_{opf_template}.xml")
         self.minetype = _Mimetype(self.EPUB_DIR)
         self.container = _ContainerFile(self.META_INF_DIR)
 
